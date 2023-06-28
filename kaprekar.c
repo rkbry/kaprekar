@@ -1,6 +1,6 @@
 /*
 Simple program to list all four-digit integers that reach Kaprekar's constant
-in a single step.
+in a single step. Spoiler: I count 357 numbers.
 
 See https://en.wikipedia.org/wiki/6174
 */
@@ -11,37 +11,43 @@ See https://en.wikipedia.org/wiki/6174
 #define SIZE 4
 
 int comp_asc(const void* a, const void* b) {
+    // Comparison function to qsort() ascending
     return(*(int*)a - *(int*)b);
 }
 
 int comp_desc(const void* a, const void* b) {
+    // Comparison function to qsort() descending
     return(*(int*)b - *(int*)a);
 }
 
-int greater(int num) {
-    /* Sort 'index' in descending order and return that new number. */
+int* split(int number) {
+    // Split the four-digit number into an array of one-digit numbers
     int* array = malloc(SIZE * sizeof(int));
-    array[0] = num / 1000;
-    array[1] = (num % 1000) / 100;
-    array[2] = (num % 100) / 10;
-    array[3] = num % 10;
+
+    array[0] = number / 1000;
+    array[1] = (number % 1000) / 100;
+    array[2] = (number % 100) / 10;
+    array[3] = number % 10;
+
+    return array;
+}
+
+int greater(int num) {
+    // Sort 'num' in descending order and return that new number
+    int* array = split(num);
 
     qsort(array, SIZE, sizeof(int), comp_desc);
 
-    return (array[0] * 1000) + (array[1] * 100) + (array[2] * 10) + array[3];
+    return (array[0]*1000) + (array[1]*100) + (array[2]*10) + array[3];
 }
 
 int lesser(int num){
-    /* Sort 'index' in ascending order and return that new number. */
-    int* array = malloc(SIZE * sizeof(int));
-    array[0] = num / 1000;
-    array[1] = (num % 1000) / 100;
-    array[2] = (num % 100) / 10;
-    array[3] = num % 10;
+    // Sort 'num' in ascending order and return that new number
+    int* array = split(num);
 
     qsort(array, SIZE, sizeof(int), comp_asc);
 
-    return (array[0] * 1000) + (array[1] * 100) + (array[2] * 10) + array[3];
+    return (array[0]*1000) + (array[1]*100) + (array[2]*10) + array[3];
 }
 
 int main(void) {
